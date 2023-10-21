@@ -1,2 +1,3 @@
 # jimine
-Graduate work
+Graduate work 
+Хорошая работа
