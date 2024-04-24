@@ -34,9 +34,6 @@ public class ProjectService {
 
     @Transactional
     public ResponseEntity<String> createProject(ProjectRequest request) {
-//        if (request.getCreatorId() == null) {
-//            throw new RuntimeException("There's no 'creatorId' param!");
-//        }
         if (request.getProjectName().isEmpty()) {
             throw new RuntimeException("There's no 'projectName' param!");
         }
@@ -74,13 +71,15 @@ public class ProjectService {
     }
 
     public Set<ProjectDto> getPrincipalsProjects() {
-        RefUserProject refUserProject = refUserProjectRepository.
-                findByUserId(SecurityService.getPrincipalUser().getId());
+        Set<RefUserProject> refUserProjects = refUserProjectRepository.findAllByUserIn(
+                Set.of(SecurityService.getPrincipalUser())
+        );
 
         return projectRepository
-                .findAllByParticipantsIn(Set.of(refUserProject))
+                .findAllByParticipantsIn(refUserProjects)
                 .stream().map(
                         elem -> ProjectDto.builder()
+                                .id(elem.getId())
                                 .name(elem.getName())
                                 .description(elem.getDescription())
                                 .projectStatusName(elem.getProjectStatus().getName())

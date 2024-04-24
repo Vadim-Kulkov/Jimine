@@ -27,6 +27,4 @@ public class ProjectController {
     public Set<ProjectDto> getPrincipalsProjects() {
         return service.getPrincipalsProjects();
     }
-//    @GetMapping("/page")
-//    public Set<ProjectDto> getPage()
 }

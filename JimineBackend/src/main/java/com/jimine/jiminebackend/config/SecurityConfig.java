@@ -52,7 +52,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout((logout) ->
+                        logout
+                                .logoutUrl("/auth/log-out").permitAll()
+                                .logoutSuccessUrl("/auth/log-out").permitAll()
+                                .invalidateHttpSession(true)
+                );
         return http.build();
     }
 
