@@ -1,19 +1,17 @@
 package com.jimine.jiminebackend.controller;
 
 import com.jimine.jiminebackend.dto.ProjectDto;
-import com.jimine.jiminebackend.request.ProjectRequest;
+import com.jimine.jiminebackend.request.project.ProjectRequest;
+import com.jimine.jiminebackend.request.project.UpdateProjectRequest;
 import com.jimine.jiminebackend.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
 @RequiredArgsConstructor
-@RestController()
+@RestController
 public class ProjectController {
 
     private final ProjectService service;
@@ -26,5 +24,15 @@ public class ProjectController {
     @GetMapping("/users/principal/projects")
     public Set<ProjectDto> getPrincipalsProjects() {
         return service.getPrincipalsProjects();
+    }
+
+    @DeleteMapping("/project/{projectId}")
+    public ResponseEntity<String> deleteProject(@PathVariable Long projectId) {
+        return service.deleteProjectById(projectId);
+    }
+
+    @PutMapping("/project/{projectId}")
+    public ResponseEntity<String> updateProject(UpdateProjectRequest request, Long projectId) {
+        return service.updateProjectById(request, projectId);
     }
 }

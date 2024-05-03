@@ -1,4 +1,4 @@
-package com.jimine.jiminebackend.request;
+package com.jimine.jiminebackend.request.project;
 
 import lombok.Data;
 
