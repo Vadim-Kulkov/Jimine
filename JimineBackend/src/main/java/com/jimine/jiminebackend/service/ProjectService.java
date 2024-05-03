@@ -10,8 +10,10 @@ import com.jimine.jiminebackend.model.dictionary.UserProjectRole;
 import com.jimine.jiminebackend.model.reference.RefUserProject;
 import com.jimine.jiminebackend.model.reference.ckey.CKeyUserProject;
 import com.jimine.jiminebackend.repository.ProjectRepository;
+import com.jimine.jiminebackend.repository.dictionary.ProjectStatusRepository;
 import com.jimine.jiminebackend.repository.reference.RefUserProjectRepository;
-import com.jimine.jiminebackend.request.ProjectRequest;
+import com.jimine.jiminebackend.request.project.ProjectRequest;
+import com.jimine.jiminebackend.request.project.UpdateProjectRequest;
 import com.jimine.jiminebackend.service.security.SecurityService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final RefUserProjectRepository refUserProjectRepository;
+    private final ProjectStatusRepository projectStatusRepository;
 
     @Transactional
     public ResponseEntity<String> createProject(ProjectRequest request) {
@@ -85,5 +88,29 @@ public class ProjectService {
                                 .projectStatusName(elem.getProjectStatus().getName())
                                 .build()
                 ).collect(Collectors.toSet());
+    }
+
+    //    @Transactional
+    public ResponseEntity<String> deleteProjectById(Long projectId) {
+        projectRepository.deleteProjectById(projectId);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> updateProjectById(UpdateProjectRequest request, Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project with given projectId is not found"));
+        if (request.getProjectStatusId() != null) {
+            ProjectStatus projectStatus = projectStatusRepository.getReferenceById(request.getProjectStatusId());
+            project.setProjectStatus(projectStatus);
+        }
+        if (request.getName() != null && !request.getName().isEmpty()) {
+            project.setName(request.getName());
+        }
+        if (request.getDescription() != null && !request.getDescription().isEmpty()) {
+            project.setDescription(request.getDescription());
+        }
+        project.setUpdatedAt(LocalDateTime.now());
+        projectRepository.save(project);
+        return  new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

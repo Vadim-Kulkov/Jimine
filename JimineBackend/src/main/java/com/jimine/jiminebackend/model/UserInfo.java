@@ -15,6 +15,9 @@ import lombok.*;
 })
 public class UserInfo extends BaseEntity {
 
+    @Id
+    @Column(name = "user_id")
+    private Long id;
     @OneToOne(mappedBy = "userInfo")
     private User user;
     @Column(name = "user_info_firstname")

@@ -5,15 +5,13 @@ import com.jimine.jiminebackend.model.User;
 import com.jimine.jiminebackend.model.dictionary.UserTaskRole;
 import com.jimine.jiminebackend.model.reference.ckey.CKeyUserTask;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "user_task")
 public class RefUserTask extends BaseReference {

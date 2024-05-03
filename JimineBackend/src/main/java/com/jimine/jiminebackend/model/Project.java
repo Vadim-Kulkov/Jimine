@@ -38,4 +38,6 @@ public class Project extends BaseEntity {
     private ProjectStatus projectStatus;
     @OneToMany(mappedBy = "project")
     private Set<RefUserProject> participants;
+    @OneToMany(mappedBy = "project")
+    private Set<Task> tasks;
 }

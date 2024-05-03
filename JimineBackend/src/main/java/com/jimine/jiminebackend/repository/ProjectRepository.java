@@ -3,6 +3,8 @@ package com.jimine.jiminebackend.repository;
 import com.jimine.jiminebackend.model.Project;
 import com.jimine.jiminebackend.model.reference.RefUserProject;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
@@ -11,4 +13,21 @@ import java.util.Set;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Set<Project> findAllByParticipantsIn(Set<RefUserProject> participants);
+
+    @Modifying
+    @Query(
+            value = """ 
+                    WITH delete_project AS (
+                        UPDATE project 
+                        SET deleted_at = now()
+                        WHERE project_id = :projectId
+                        RETURNING project_id
+                    )
+                    UPDATE task 
+                    SET deleted_at = now()
+                    WHERE project_id IN (SELECT project_id FROM delete_project)
+                    """,
+            nativeQuery = true
+    )
+    void deleteProjectById(Long projectId);
 }

@@ -60,21 +60,21 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return deletedAt == null;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return deletedAt == null;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return deletedAt == null;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return deletedAt == null;
     }
 }
