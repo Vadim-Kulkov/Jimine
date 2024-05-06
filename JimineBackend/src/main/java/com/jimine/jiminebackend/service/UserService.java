@@ -105,6 +105,7 @@ public class UserService {
                         .getResultList()
         );
 
+        // todo добавить вывод дтохи с проектом и ролью на проекте
         List<UserDto> resultedDtos = users.stream().map(elem -> {
             return UserDto.builder()
                     .username(elem.getUsername())
