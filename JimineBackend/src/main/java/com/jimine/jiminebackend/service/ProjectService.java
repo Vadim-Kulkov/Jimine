@@ -15,6 +15,7 @@ import com.jimine.jiminebackend.repository.reference.RefUserProjectRepository;
 import com.jimine.jiminebackend.request.project.ProjectRequest;
 import com.jimine.jiminebackend.request.project.UpdateProjectRequest;
 import com.jimine.jiminebackend.service.security.SecurityService;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,7 @@ import static com.jimine.jiminebackend.service.security.SecurityService.getPrinc
 @Service
 public class ProjectService {
 
+    private final EntityManager em;
     private final ProjectRepository projectRepository;
     private final RefUserProjectRepository refUserProjectRepository;
     private final ProjectStatusRepository projectStatusRepository;
@@ -90,7 +92,6 @@ public class ProjectService {
                 ).collect(Collectors.toSet());
     }
 
-    //    @Transactional
     public ResponseEntity<String> deleteProjectById(Long projectId) {
         projectRepository.deleteProjectById(projectId);
         return new ResponseEntity<>("Success", HttpStatus.OK);

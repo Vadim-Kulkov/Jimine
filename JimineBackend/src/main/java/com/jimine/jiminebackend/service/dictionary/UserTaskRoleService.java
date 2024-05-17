@@ -18,7 +18,7 @@ public class UserTaskRoleService {
 
     public Page<UserTaskRole> getPage(BasePageRequest request) {
         if(request.getPageSize() == null) {
-            request.setPageSize(BasePageRequest.defaultPageSize);
+            request.setPageSize(BasePageRequest.DEFAULT_PAGE_SIZE);
         }
 
         Pageable pageRequest = PageRequest.of(0, request.getPageSize(), Sort.by("id"));

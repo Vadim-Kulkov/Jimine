@@ -2,6 +2,7 @@ package com.jimine.jiminebackend.repository;
 
 import com.jimine.jiminebackend.model.Project;
 import com.jimine.jiminebackend.model.reference.RefUserProject;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Set<Project> findAllByParticipantsIn(Set<RefUserProject> participants);
 
-    @Modifying
+    @Transactional
+    @Modifying(clearAutomatically = true)
     @Query(
             value = """ 
                     WITH delete_project AS (
@@ -29,5 +31,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
                     """,
             nativeQuery = true
     )
-    void deleteProjectById(Long projectId);
+    void deleteProjectById(Long projectId); // todo rename to mark as deleted
 }

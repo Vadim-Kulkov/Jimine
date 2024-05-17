@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Entity
-@Table
+@Table(name = "task_priority")
 @AttributeOverrides({
         @AttributeOverride(name = "id", column = @Column(name = "task_priority_id")),
         @AttributeOverride(name = "name", column = @Column(name = "task_priority_name"))

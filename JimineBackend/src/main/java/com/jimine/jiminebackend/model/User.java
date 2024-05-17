@@ -50,7 +50,7 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Role> roles;
     @OneToMany(mappedBy = "user")
     private Set<RefUserProject> projects;
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private Set<RefUserTask> tasks;
 
     @Override

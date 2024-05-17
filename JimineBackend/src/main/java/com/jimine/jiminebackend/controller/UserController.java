@@ -1,6 +1,7 @@
 package com.jimine.jiminebackend.controller;
 
 import com.jimine.jiminebackend.dto.UserDto;
+import com.jimine.jiminebackend.dto.UserTaskDto;
 import com.jimine.jiminebackend.request.user.UserSearchRequest;
 import com.jimine.jiminebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,16 @@ public class UserController {
     @GetMapping("/users/page")
     public List<UserDto> getPage(@RequestBody UserSearchRequest request) {
         return service.getUserPage(request); // TODO required responseType is Page<UserDto>
+    }
+
+    @GetMapping("/tasks/{taskId}/users")
+    public List<UserTaskDto> getUsersByTaskId(@PathVariable Long taskId) {
+        return service.getUsersByTaskId(taskId);
+    }
+
+    @GetMapping("/projects/{projectId}/users")
+    public List<UserTaskDto> getUsersByProjectId(@PathVariable Long projectId) {
+        return service.getUsersByProjectId(projectId);
     }
 
 //    @GetMapping("/project/users")

@@ -1,11 +1,13 @@
 package com.jimine.jiminebackend.service;
 
 import com.jimine.jiminebackend.dto.UserDto;
+import com.jimine.jiminebackend.dto.UserTaskDto;
 import com.jimine.jiminebackend.model.BaseEntity;
 import com.jimine.jiminebackend.model.Project;
 import com.jimine.jiminebackend.model.User;
 import com.jimine.jiminebackend.model.dictionary.UserProjectRole;
 import com.jimine.jiminebackend.model.reference.RefUserProject;
+import com.jimine.jiminebackend.model.reference.RefUserTask;
 import com.jimine.jiminebackend.model.reference.ckey.CKeyUserProject;
 import com.jimine.jiminebackend.repository.UserRepository;
 import com.jimine.jiminebackend.repository.reference.RefUserProjectRepository;
@@ -41,7 +43,7 @@ public class UserService {
 
     public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
-            // Заменить на свои исключения
+            // todo Заменить на свои исключения
             throw new RuntimeException("Пользователь с таким именем уже существует");
         }
 
@@ -67,6 +69,56 @@ public class UserService {
         return getByUsername(username);
     }
 
+    public List<UserTaskDto> getUsersByTaskId(Long taskId) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserTaskDto> criteriaQuery = criteriaBuilder.createQuery(UserTaskDto.class);
+        Root<User> root = criteriaQuery.from(User.class);
+
+        Join<User, RefUserTask> refUserTaskJoin = root.join("tasks", JoinType.INNER);
+        criteriaQuery.where(
+                List.of(
+                        criteriaBuilder.equal(refUserTaskJoin.get("task").get("id"), taskId),
+                        criteriaBuilder.isNull(refUserTaskJoin.get("task").get("deletedAt"))
+                ).toArray(Predicate[]::new)
+        );// todo userTaskRole should not be ADMIN
+
+        criteriaQuery.select(
+                criteriaBuilder.construct(
+                        UserTaskDto.class,
+                        root.get("id"),
+                        root.get("username"),
+                        refUserTaskJoin.get("userTaskRole").get("id"),
+                        refUserTaskJoin.get("userTaskRole").get("name")
+                )
+        );
+        return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    public List<UserTaskDto> getUsersByProjectId(Long projectId) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserTaskDto> criteriaQuery = criteriaBuilder.createQuery(UserTaskDto.class);
+        Root<User> root = criteriaQuery.from(User.class);
+
+        Join<User, RefUserProject> refUserProjectJoin = root.join("projects", JoinType.INNER);
+        criteriaQuery.where(
+                List.of(
+                        criteriaBuilder.equal(refUserProjectJoin.get("project").get("id"), projectId),
+                        criteriaBuilder.isNull(refUserProjectJoin.get("project").get("deletedAt"))
+                ).toArray(Predicate[]::new)
+        ); // todo userProjectRole should not be ADMIN
+
+        criteriaQuery.select(
+                criteriaBuilder.construct(
+                        UserTaskDto.class,
+                        root.get("id"),
+                        root.get("username"),
+                        refUserProjectJoin.get("userProjectRole").get("id"),
+                        refUserProjectJoin.get("userProjectRole").get("name")
+                )
+        );
+        return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
     public List<UserDto> getUserPage(UserSearchRequest request) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
@@ -90,13 +142,14 @@ public class UserService {
 
         }
         if (request.getTaskId() != null) {
-
+            Join<User, RefUserTask> refUserTaskJoin = root.join("tasks", JoinType.INNER);
+            predicates.add(criteriaBuilder.equal(refUserTaskJoin.get("task").get("id"), request.getTaskId()));
         }
 
         criteriaQuery.where(predicates.toArray(Predicate[]::new));
 
         if (request.getPageSize() == null) {
-            request.setPageSize(BasePageRequest.defaultPageSize);
+            request.setPageSize(BasePageRequest.DEFAULT_PAGE_SIZE);
         }
         Set<User> users = new HashSet<>(
                 entityManager.createQuery((criteriaQuery))
@@ -108,12 +161,13 @@ public class UserService {
         // todo добавить вывод дтохи с проектом и ролью на проекте
         List<UserDto> resultedDtos = users.stream().map(elem -> {
             return UserDto.builder()
+                    .id(elem.getId())
                     .username(elem.getUsername())
                     .email(elem.getEmail())
                     .createdAt(elem.getCreatedAt())
                     .updatedAt(elem.getUpdatedAt())
                     .deletedAt(elem.getDeletedAt())
-                    .userInfoId(elem.getUserInfo().getId())
+                    .userInfoId(elem.getUserInfo() != null ? elem.getUserInfo().getId() : null)
                     .commentIds(elem.getComments().stream().map(BaseEntity::getId).collect(Collectors.toSet()))
                     .roleIds(elem.getRoles().stream().map(BaseEntity::getId).collect(Collectors.toSet()))
                     .projectIds(elem.getProjects().stream().map(e -> e.getProject().getId()).collect(Collectors.toSet()))

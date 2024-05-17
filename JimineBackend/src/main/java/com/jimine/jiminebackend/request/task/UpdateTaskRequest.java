@@ -1,18 +1,15 @@
 package com.jimine.jiminebackend.request.task;
 
-import com.jimine.jiminebackend.request.TaskWorkerRequest;
+import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
+@Builder
 @Data
-public class CreateTaskRequest {
+public class UpdateTaskRequest {
 
-    private Long projectId;
     private String name;
     private String description;
     private Long taskStatusId;
     private Long taskTypeId;
     private Long taskPriorityId;
-    private List<TaskWorkerRequest> workerRequestSet;
 }

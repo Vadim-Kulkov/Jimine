@@ -10,10 +10,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "user_info")
-@AttributeOverrides({
-        @AttributeOverride(name = "id", column = @Column(name = "user_id")),
-})
-public class UserInfo extends BaseEntity {
+public class UserInfo {
 
     @Id
     @Column(name = "user_id")
