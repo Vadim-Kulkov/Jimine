@@ -46,6 +46,6 @@ public class Task extends BaseEntity {
     private Project project;
     @OneToMany(mappedBy = "task")
     private Set<TaskComment> comments;
-    @OneToMany
+    @OneToMany(mappedBy = "task")
     private Set<RefUserTask> workers;
 }

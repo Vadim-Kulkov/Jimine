@@ -31,11 +31,6 @@ public class UserController {
         return service.getUsersByProjectId(projectId);
     }
 
-//    @GetMapping("/project/users")
-//    public List<UserDto> findUsersByProjectId(UserSearchRequest request) {
-//        return service.findUsersByProjectId(request);
-//    }
-
     @PostMapping("/projects/{projectId}/add-user/{roleId}/{userId}")
     public ResponseEntity<String> addUserToTheProject(@PathVariable Long userId,
                                                       @PathVariable Long roleId,

@@ -3,7 +3,6 @@ package com.jimine.jiminebackend.controller;
 import com.jimine.jiminebackend.dto.TaskDto;
 import com.jimine.jiminebackend.request.task.AddUserRequestWrapper;
 import com.jimine.jiminebackend.request.task.CreateTaskRequest;
-import com.jimine.jiminebackend.request.task.TaskPageRequest;
 import com.jimine.jiminebackend.request.task.UpdateTaskRequest;
 import com.jimine.jiminebackend.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -12,31 +11,38 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping
 public class TaskController {
 
     private final TaskService service;
 
-    @GetMapping("/page")
-    public List<TaskDto> getPage(@RequestBody TaskPageRequest request) {
-        return service.getTaskPage(request);
+    @GetMapping("users/me/tasks")
+    public List<TaskDto> getPage(@RequestParam Map<String, String> searchParams) {
+        return service.findAllByPrincipal(searchParams);
     }
 
-    @PostMapping
+    @GetMapping("projects/{projectId}/tasks")
+    public List<TaskDto> getTasksByProjectId(@PathVariable Long projectId,
+                                             @RequestParam Map<String, String> searchParams) {
+        return service.findAllByProjectId(projectId, searchParams);
+    }
+
+    @PostMapping("tasks")
     public ResponseEntity<String> createTask(@RequestBody CreateTaskRequest request) { // TODO set principal as the creator
         return service.createTask(request);
     }
 
-    @PostMapping("/{taskId}/users")
+    @PostMapping("tasks/{taskId}/users")
     public ResponseEntity<String> addUsersToTheTask(@RequestBody AddUserRequestWrapper addUserRequestWrapper,
                                                     @PathVariable Long taskId) {
         return service.addWorkersToTheTask(new HashSet<>(addUserRequestWrapper.getWorkerRequestList()), taskId);
     }
 
-    @DeleteMapping("/{taskId}/users/{roleId}/{userId}")
+    @DeleteMapping("tasks/{taskId}/users/{roleId}/{userId}")
     public ResponseEntity<String> removeUserFromTheTask(
             @PathVariable Long taskId,
             @PathVariable Long roleId,
@@ -45,12 +51,12 @@ public class TaskController {
         return service.removeWorkerAssociationTheTask(taskId, roleId, userId);
     }
 
-    @DeleteMapping("/{taskId}")
+    @DeleteMapping("tasks/{taskId}")
     public ResponseEntity<String> deleteById(@PathVariable Long taskId) {
         return service.deleteById(taskId);
     }
 
-    @PostMapping("/{taskId}")
+    @PostMapping("tasks/{taskId}")
     public ResponseEntity<String> updateById(@RequestBody UpdateTaskRequest request, @PathVariable Long taskId) {
         return service.updateTask(request, taskId);
     }

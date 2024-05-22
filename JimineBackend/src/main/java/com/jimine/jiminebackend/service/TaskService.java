@@ -18,7 +18,6 @@ import com.jimine.jiminebackend.repository.dictionary.TaskTypeRepository;
 import com.jimine.jiminebackend.repository.reference.RefUserTaskRepository;
 import com.jimine.jiminebackend.request.TaskWorkerRequest;
 import com.jimine.jiminebackend.request.task.CreateTaskRequest;
-import com.jimine.jiminebackend.request.task.TaskPageRequest;
 import com.jimine.jiminebackend.request.task.UpdateTaskRequest;
 import com.jimine.jiminebackend.service.security.SecurityService;
 import jakarta.persistence.EntityManager;
@@ -30,10 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -48,35 +44,53 @@ public class TaskService {
     private final ProjectRepository projectRepository;
     private final RefUserTaskRepository userTaskRepository;
 
-    public List<TaskDto> getTaskPage(TaskPageRequest request) {
+    public List<TaskDto> findAllByProjectId(Long projectId, Map<String, String> searchParams) {
+        if(projectId == null) {
+            throw new RuntimeException("There's no projectId param");
+        }
+        searchParams.put("projectId", projectId.toString());
+        return findAll(searchParams);
+    }
+
+    public List<TaskDto> findAllByPrincipal(Map<String, String> searchParams) {
+        searchParams.put("workerId", SecurityService.getPrincipalUser().getId().toString());
+        return findAll(searchParams);
+    }
+
+    public List<TaskDto> findAll(Map<String, String> searchParams) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TaskDto> criteriaQuery = criteriaBuilder.createQuery(TaskDto.class);
         Root<Task> taskRoot = criteriaQuery.from(Task.class);
 
         List<Predicate> predicates = new ArrayList<>();
-        if (request.getTaskId() != null) {
-            predicates.add(criteriaBuilder.equal(taskRoot.get("id"), request.getTaskId()));
+        if (searchParams.containsKey("id")) {
+            predicates.add(criteriaBuilder.equal(taskRoot.get("id"), searchParams.get("id")));
         }
-        if (request.getTaskName() != null && !request.getTaskName().isBlank()) { // check case-insensitivity
-            predicates.add(criteriaBuilder.like(taskRoot.get("name"), "%" + request.getTaskName().toLowerCase() + "%"));
+        if (searchParams.containsKey("name") && !searchParams.get("name").isBlank()) { // check case-insensitivity
+            predicates.add(criteriaBuilder.like(taskRoot.get("name"), '%' + searchParams.get("name") + '%')
+            );
         }
-        if (request.getTaskStatusId() != null) {
-            predicates.add(criteriaBuilder.equal(taskRoot.get("taskStatus").get("id"), request.getTaskStatusId()));
+        if (searchParams.containsKey("taskStatusId")) {
+            predicates.add(criteriaBuilder.equal(
+                    taskRoot.get("taskStatus").get("id"), searchParams.get("taskStatusId"))
+            );
         }
-        if (request.getTaskTypeId() != null) {
-            predicates.add(criteriaBuilder.equal(taskRoot.get("taskType").get("id"), request.getTaskTypeId()));
+        if (searchParams.containsKey("taskTypeId")) {
+            predicates.add(criteriaBuilder.equal(taskRoot.get("taskType").get("id"), searchParams.get("taskTypeId")));
         }
-        if (request.getTaskPriorityId() != null) {
-            predicates.add(criteriaBuilder.equal(taskRoot.get("taskPriority").get("id"), request.getTaskPriorityId()));
+        if (searchParams.containsKey("taskPriorityId")) {
+            predicates.add(criteriaBuilder.equal(
+                    taskRoot.get("taskPriority").get("id"), searchParams.get("taskPriorityId"))
+            );
         }
-        if (request.getProjectId() != null) {
-            predicates.add(criteriaBuilder.equal(taskRoot.get("project").get("id"), request.getProjectId()));
+        if (searchParams.containsKey("projectId")) {
+            predicates.add(criteriaBuilder.equal(taskRoot.get("project").get("id"), searchParams.get("projectId")));
         }
-        if (request.getWorkerId() != null) {
+        if (searchParams.containsKey("workerId")) {
             Join<Task, RefUserTask> taskUserRefJoin = taskRoot.join("workers");
-            predicates.add(criteriaBuilder.equal(taskUserRefJoin.get("user").get("id"), request.getWorkerId()));
+            predicates.add(criteriaBuilder.equal(taskUserRefJoin.get("user").get("id"), searchParams.get("workerId")));
         }
-        //taskRoot.fetch("comments", JoinType.LEFT);
+
         predicates.add(criteriaBuilder.isNull(taskRoot.get("deletedAt")));
         criteriaQuery.where(predicates.toArray(Predicate[]::new));
         criteriaQuery.select(
