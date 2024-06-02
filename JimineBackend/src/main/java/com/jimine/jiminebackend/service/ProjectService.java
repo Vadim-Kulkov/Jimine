@@ -93,11 +93,15 @@ public class ProjectService {
     }
 
     public ResponseEntity<String> deleteProjectById(Long projectId) {
+        checkUserHasAdminRoleOnProject(projectId);
+
         projectRepository.deleteProjectById(projectId);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     public ResponseEntity<String> updateProjectById(UpdateProjectRequest request, Long projectId) {
+        checkUserHasAdminRoleOnProject(projectId);
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project with given projectId is not found"));
         if (request.getProjectStatusId() != null) {
@@ -112,6 +116,16 @@ public class ProjectService {
         }
         project.setUpdatedAt(LocalDateTime.now());
         projectRepository.save(project);
-        return  new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    private void checkUserHasAdminRoleOnProject(Long projectId) {
+        refUserProjectRepository.findById(
+                CKeyUserProject.builder()
+                        .userId(getPrincipalUser().getId())
+                        .projectId(projectId)
+                        .userProjectRoleId(UserProjectRoleEnum.ADMIN.getUserProjectRoleId())
+                        .build()
+        ).orElseThrow(() -> new RuntimeException("You don't have the permission to delete project!"));
     }
 }

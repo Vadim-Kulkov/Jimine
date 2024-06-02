@@ -1,6 +1,7 @@
 package com.jimine.jiminebackend.service;
 
 import com.jimine.jiminebackend.dto.TaskDto;
+import com.jimine.jiminebackend.dto.TaskHistDto;
 import com.jimine.jiminebackend.model.Project;
 import com.jimine.jiminebackend.model.Task;
 import com.jimine.jiminebackend.model.User;
@@ -43,9 +44,10 @@ public class TaskService {
     private final TaskPriorityRepository taskPriorityRepository;
     private final ProjectRepository projectRepository;
     private final RefUserTaskRepository userTaskRepository;
+    private final UserService userService;
 
     public List<TaskDto> findAllByProjectId(Long projectId, Map<String, String> searchParams) {
-        if(projectId == null) {
+        if (projectId == null) {
             throw new RuntimeException("There's no projectId param");
         }
         searchParams.put("projectId", projectId.toString());
@@ -86,14 +88,22 @@ public class TaskService {
         if (searchParams.containsKey("projectId")) {
             predicates.add(criteriaBuilder.equal(taskRoot.get("project").get("id"), searchParams.get("projectId")));
         }
+        Join<Task, RefUserTask> taskUserRefJoin = taskRoot.join("workers");
         if (searchParams.containsKey("workerId")) {
-            Join<Task, RefUserTask> taskUserRefJoin = taskRoot.join("workers");
             predicates.add(criteriaBuilder.equal(taskUserRefJoin.get("user").get("id"), searchParams.get("workerId")));
         }
+        if (searchParams.containsKey("deleted")) {
+            if (Boolean.valueOf(searchParams.get("deleted"))) {
+                predicates.add(criteriaBuilder.isNotNull(taskRoot.get("deletedAt")));
+            } else {
+                predicates.add(criteriaBuilder.isNull(taskRoot.get("deletedAt")));
+            }
+        } else {
+            predicates.add(criteriaBuilder.isNull(taskRoot.get("deletedAt")));
+        }
 
-        predicates.add(criteriaBuilder.isNull(taskRoot.get("deletedAt")));
         criteriaQuery.where(predicates.toArray(Predicate[]::new));
-        criteriaQuery.select(
+        criteriaQuery.multiselect(
                 criteriaBuilder.construct(
                         TaskDto.class,
                         taskRoot.get("id"),
@@ -107,7 +117,14 @@ public class TaskService {
                         taskRoot.get("taskPriority").get("name")
                 )
         );
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        List<TaskDto> resultDtos = entityManager.createQuery(criteriaQuery).getResultList();
+
+        if (searchParams.containsKey("withUsers")) {
+            resultDtos = resultDtos.stream().peek(
+                    (elem) -> elem.setTaskWorkers(userService.getUsersByTaskId(elem.getTaskId()))
+            ).toList();
+        }
+        return resultDtos;
     }
 
     public ResponseEntity<String> createTask(CreateTaskRequest request) {
@@ -187,13 +204,13 @@ public class TaskService {
     }
 
     public ResponseEntity<String> removeWorkerAssociationTheTask(Long taskId, Long roleId, Long userId) {
-        if(taskId == null) {
+        if (taskId == null) {
             throw new RuntimeException("There's no taskId param");
         }
-        if(userId == null) {
+        if (userId == null) {
             throw new RuntimeException("There's no userId param");
         }
-        if(roleId == null) {
+        if (roleId == null) {
             throw new RuntimeException("There's no roleId param");
         }
         CKeyUserTask userTaskCKey = CKeyUserTask.builder()
@@ -214,7 +231,7 @@ public class TaskService {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @Transactional // todo remove
+    @Transactional
     public ResponseEntity<String> updateTask(UpdateTaskRequest request, Long taskId) {
         Task task = entityManager.find(Task.class, taskId);
         task.setUpdatedAt(LocalDateTime.now());
@@ -241,5 +258,40 @@ public class TaskService {
         }
         entityManager.persist(task);
         return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    public List<TaskHistDto> getTaskHistory() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TaskHistDto> criteriaQuery = criteriaBuilder.createQuery(TaskHistDto.class);
+        Root<Task> taskRoot = criteriaQuery.from(Task.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        Join<Task, RefUserTask> taskUserRefJoin = taskRoot.join("workers");
+
+        predicates.add(criteriaBuilder.equal(
+                taskUserRefJoin.get("user").get("id"), SecurityService.getPrincipalUser().getId())
+        );
+        predicates.add(criteriaBuilder.isNotNull(taskRoot.get("deletedAt")));
+
+        criteriaQuery.where(predicates.toArray(Predicate[]::new));
+        criteriaQuery.select(
+                criteriaBuilder.construct(  // добавить роль юзера на задаче
+                        TaskHistDto.class,
+                        taskRoot.get("id"),
+                        taskRoot.get("name"),
+                        taskRoot.get("description"),
+                        taskRoot.get("project").get("id"),
+                        taskRoot.get("project").get("name"),
+                        taskRoot.get("taskStatus").get("id"),
+                        taskRoot.get("taskStatus").get("name"),
+                        taskRoot.get("taskType").get("id"),
+                        taskRoot.get("taskType").get("name"),
+                        taskRoot.get("taskPriority").get("id"),
+                        taskRoot.get("taskPriority").get("name"),
+                        taskRoot.get("deletedAt")
+                )
+        );
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 }

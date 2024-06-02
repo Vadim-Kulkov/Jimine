@@ -16,7 +16,7 @@ public class UserController {
 
     private final UserService service;
 
-    @GetMapping("/users/page")
+    @GetMapping("/users/page") // todo rework
     public List<UserDto> getPage(@RequestBody UserSearchRequest request) {
         return service.getUserPage(request); // TODO required responseType is Page<UserDto>
     }

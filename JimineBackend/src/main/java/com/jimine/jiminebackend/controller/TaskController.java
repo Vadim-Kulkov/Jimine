@@ -1,6 +1,7 @@
 package com.jimine.jiminebackend.controller;
 
 import com.jimine.jiminebackend.dto.TaskDto;
+import com.jimine.jiminebackend.dto.TaskHistDto;
 import com.jimine.jiminebackend.request.task.AddUserRequestWrapper;
 import com.jimine.jiminebackend.request.task.CreateTaskRequest;
 import com.jimine.jiminebackend.request.task.UpdateTaskRequest;
@@ -60,4 +61,10 @@ public class TaskController {
     public ResponseEntity<String> updateById(@RequestBody UpdateTaskRequest request, @PathVariable Long taskId) {
         return service.updateTask(request, taskId);
     }
+
+    @GetMapping("tasks/hist")
+    public List<TaskHistDto> getCurrentUserTaskHistory() {
+        return service.getTaskHistory();
+    }
+
 }

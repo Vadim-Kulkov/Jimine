@@ -18,7 +18,6 @@ import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final EntityManager entityManager;
+    private final EntityManager em;
     private final UserRepository repository;
     private final RefUserProjectRepository refUserProjectRepository;
 
@@ -43,20 +42,17 @@ public class UserService {
 
     public User create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
-            // todo Заменить на свои исключения
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+            throw new RuntimeException("User with given username param already exists");
         }
-
         if (repository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Пользователь с таким email уже существует");
+            throw new RuntimeException("User with given email param already exists");
         }
-
         return save(user);
     }
 
     public User getByUsername(String username) {
         return repository.findByUsernameOrEmail(username, username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
     }
 
@@ -64,13 +60,8 @@ public class UserService {
         return this::getByUsername;
     }
 
-    public User getCurrentUser() { // todo сделать статиком и юзать в других местах
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByUsername(username);
-    }
-
     public List<UserTaskDto> getUsersByTaskId(Long taskId) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<UserTaskDto> criteriaQuery = criteriaBuilder.createQuery(UserTaskDto.class);
         Root<User> root = criteriaQuery.from(User.class);
 
@@ -91,11 +82,11 @@ public class UserService {
                         refUserTaskJoin.get("userTaskRole").get("name")
                 )
         );
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return em.createQuery(criteriaQuery).getResultList();
     }
 
     public List<UserTaskDto> getUsersByProjectId(Long projectId) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<UserTaskDto> criteriaQuery = criteriaBuilder.createQuery(UserTaskDto.class);
         Root<User> root = criteriaQuery.from(User.class);
 
@@ -116,11 +107,11 @@ public class UserService {
                         refUserProjectJoin.get("userProjectRole").get("name")
                 )
         );
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return em.createQuery(criteriaQuery).getResultList();
     }
 
     public List<UserDto> getUserPage(UserSearchRequest request) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
 
         Root<User> root = criteriaQuery.from(User.class);
@@ -152,7 +143,7 @@ public class UserService {
             request.setPageSize(BasePageRequest.DEFAULT_PAGE_SIZE);
         }
         Set<User> users = new HashSet<>(
-                entityManager.createQuery((criteriaQuery))
+                em.createQuery((criteriaQuery))
                         .setFirstResult(0)
                         .setMaxResults(request.getPageSize())
                         .getResultList()
