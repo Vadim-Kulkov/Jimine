@@ -13,5 +13,4 @@ public class JimineBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(JimineBackendApplication.class, args);
     }
-
 }

@@ -1,7 +1,7 @@
 package com.jimine.jiminebackend.controller.dictionary;
 
-import com.jimine.jiminebackend.model.dictionary.UserTaskRole;
-import com.jimine.jiminebackend.request.BasePageRequest;
+import com.jimine.jiminebackend.model.entity.dictionary.UserTaskRole;
+import com.jimine.jiminebackend.model.request.BasePageRequest;
 import com.jimine.jiminebackend.service.dictionary.UserTaskRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

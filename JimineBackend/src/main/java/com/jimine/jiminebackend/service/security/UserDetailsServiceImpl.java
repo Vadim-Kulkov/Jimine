@@ -1,6 +1,6 @@
 package com.jimine.jiminebackend.service.security;
 
-import com.jimine.jiminebackend.model.User;
+import com.jimine.jiminebackend.model.entity.User;
 import com.jimine.jiminebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

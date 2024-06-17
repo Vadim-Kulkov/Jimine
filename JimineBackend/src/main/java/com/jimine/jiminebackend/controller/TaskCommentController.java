@@ -1,8 +1,8 @@
 package com.jimine.jiminebackend.controller;
 
-import com.jimine.jiminebackend.dto.TaskCommentDto;
-import com.jimine.jiminebackend.request.CreateTaskCommentRequest;
-import com.jimine.jiminebackend.request.TaskCommentRequest;
+import com.jimine.jiminebackend.model.dto.TaskCommentDto;
+import com.jimine.jiminebackend.model.request.CreateTaskCommentRequest;
+import com.jimine.jiminebackend.model.request.TaskCommentRequest;
 import com.jimine.jiminebackend.service.TaskCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,8 @@
 package com.jimine.jiminebackend.service.dictionary;
 
-import com.jimine.jiminebackend.model.dictionary.TaskStatus;
+import com.jimine.jiminebackend.model.entity.dictionary.TaskStatus;
 import com.jimine.jiminebackend.repository.dictionary.TaskStatusRepository;
-import com.jimine.jiminebackend.request.BasePageRequest;
+import com.jimine.jiminebackend.model.request.BasePageRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

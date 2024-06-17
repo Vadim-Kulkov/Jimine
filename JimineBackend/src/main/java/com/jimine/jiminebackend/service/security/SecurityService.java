@@ -1,6 +1,6 @@
 package com.jimine.jiminebackend.service.security;
 
-import com.jimine.jiminebackend.model.User;
+import com.jimine.jiminebackend.model.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

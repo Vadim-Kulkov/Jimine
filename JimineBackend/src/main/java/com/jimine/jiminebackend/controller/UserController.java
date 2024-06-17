@@ -1,8 +1,8 @@
 package com.jimine.jiminebackend.controller;
 
-import com.jimine.jiminebackend.dto.UserDto;
-import com.jimine.jiminebackend.dto.UserTaskDto;
-import com.jimine.jiminebackend.request.user.UserSearchRequest;
+import com.jimine.jiminebackend.model.dto.UserDto;
+import com.jimine.jiminebackend.model.dto.UserTaskDto;
+import com.jimine.jiminebackend.model.request.user.UserSearchRequest;
 import com.jimine.jiminebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,12 +1,12 @@
 package com.jimine.jiminebackend.service;
 
-import com.jimine.jiminebackend.dto.TaskCommentDto;
-import com.jimine.jiminebackend.model.Task;
-import com.jimine.jiminebackend.model.TaskComment;
+import com.jimine.jiminebackend.model.dto.TaskCommentDto;
+import com.jimine.jiminebackend.model.entity.Task;
+import com.jimine.jiminebackend.model.entity.TaskComment;
 import com.jimine.jiminebackend.repository.TaskCommentRepository;
 import com.jimine.jiminebackend.repository.TaskRepository;
-import com.jimine.jiminebackend.request.CreateTaskCommentRequest;
-import com.jimine.jiminebackend.request.TaskCommentRequest;
+import com.jimine.jiminebackend.model.request.CreateTaskCommentRequest;
+import com.jimine.jiminebackend.model.request.TaskCommentRequest;
 import com.jimine.jiminebackend.service.security.SecurityService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

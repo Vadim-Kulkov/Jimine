@@ -1,6 +1,6 @@
 package com.jimine.jiminebackend.repository;
 
-import com.jimine.jiminebackend.model.dictionary.Role;
+import com.jimine.jiminebackend.model.entity.dictionary.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

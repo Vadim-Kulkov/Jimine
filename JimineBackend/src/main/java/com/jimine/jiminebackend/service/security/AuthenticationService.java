@@ -1,12 +1,12 @@
 package com.jimine.jiminebackend.service.security;
 
-import com.jimine.jiminebackend.dto.JwtAuthenticationResponse;
+import com.jimine.jiminebackend.model.dto.JwtAuthenticationResponse;
 import com.jimine.jiminebackend.enums.RoleEnum;
-import com.jimine.jiminebackend.model.User;
-import com.jimine.jiminebackend.model.dictionary.Role;
+import com.jimine.jiminebackend.model.entity.User;
+import com.jimine.jiminebackend.model.entity.dictionary.Role;
 import com.jimine.jiminebackend.repository.RoleRepository;
-import com.jimine.jiminebackend.request.SignInRequest;
-import com.jimine.jiminebackend.request.SignUpRequest;
+import com.jimine.jiminebackend.model.request.SignInRequest;
+import com.jimine.jiminebackend.model.request.SignUpRequest;
 import com.jimine.jiminebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,7 +40,7 @@ public class AuthenticationService {
         Set<GrantedAuthority> authorities = Set.of(defaultRole).stream().map((role)
                     -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
 
-//        com.jimine.jiminebackend.model.User user = (com.jimine.jiminebackend.model.User)User.builder()
+//        com.jimine.jiminebackend.model.entity.User user = (com.jimine.jiminebackend.model.entity.User)User.builder()
 //                .username(request.getUsername())
 ////                .email(request.getEmail()) todo shitted
 //                .password(passwordEncoder.encode(request.getPassword()))

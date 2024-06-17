@@ -1,25 +1,25 @@
 package com.jimine.jiminebackend.service;
 
-import com.jimine.jiminebackend.dto.TaskDto;
-import com.jimine.jiminebackend.dto.TaskHistDto;
-import com.jimine.jiminebackend.model.Project;
-import com.jimine.jiminebackend.model.Task;
-import com.jimine.jiminebackend.model.User;
-import com.jimine.jiminebackend.model.dictionary.TaskPriority;
-import com.jimine.jiminebackend.model.dictionary.TaskStatus;
-import com.jimine.jiminebackend.model.dictionary.TaskType;
-import com.jimine.jiminebackend.model.dictionary.UserTaskRole;
-import com.jimine.jiminebackend.model.reference.RefUserTask;
-import com.jimine.jiminebackend.model.reference.ckey.CKeyUserTask;
+import com.jimine.jiminebackend.model.dto.TaskDto;
+import com.jimine.jiminebackend.model.dto.TaskHistDto;
+import com.jimine.jiminebackend.model.entity.Project;
+import com.jimine.jiminebackend.model.entity.Task;
+import com.jimine.jiminebackend.model.entity.User;
+import com.jimine.jiminebackend.model.entity.dictionary.TaskPriority;
+import com.jimine.jiminebackend.model.entity.dictionary.TaskStatus;
+import com.jimine.jiminebackend.model.entity.dictionary.TaskType;
+import com.jimine.jiminebackend.model.entity.dictionary.UserTaskRole;
+import com.jimine.jiminebackend.model.entity.reference.RefUserTask;
+import com.jimine.jiminebackend.model.entity.reference.ckey.CKeyUserTask;
 import com.jimine.jiminebackend.repository.ProjectRepository;
 import com.jimine.jiminebackend.repository.TaskRepository;
 import com.jimine.jiminebackend.repository.dictionary.TaskPriorityRepository;
 import com.jimine.jiminebackend.repository.dictionary.TaskStatusRepository;
 import com.jimine.jiminebackend.repository.dictionary.TaskTypeRepository;
 import com.jimine.jiminebackend.repository.reference.RefUserTaskRepository;
-import com.jimine.jiminebackend.request.TaskWorkerRequest;
-import com.jimine.jiminebackend.request.task.CreateTaskRequest;
-import com.jimine.jiminebackend.request.task.UpdateTaskRequest;
+import com.jimine.jiminebackend.model.request.TaskWorkerRequest;
+import com.jimine.jiminebackend.model.request.task.CreateTaskRequest;
+import com.jimine.jiminebackend.model.request.task.UpdateTaskRequest;
 import com.jimine.jiminebackend.service.security.SecurityService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
@@ -92,15 +92,15 @@ public class TaskService {
         if (searchParams.containsKey("workerId")) {
             predicates.add(criteriaBuilder.equal(taskUserRefJoin.get("user").get("id"), searchParams.get("workerId")));
         }
-        if (searchParams.containsKey("deleted")) {
-            if (Boolean.valueOf(searchParams.get("deleted"))) {
-                predicates.add(criteriaBuilder.isNotNull(taskRoot.get("deletedAt")));
-            } else {
-                predicates.add(criteriaBuilder.isNull(taskRoot.get("deletedAt")));
-            }
-        } else {
-            predicates.add(criteriaBuilder.isNull(taskRoot.get("deletedAt")));
-        }
+//        if (searchParams.containsKey("deleted")) {
+//            if (Boolean.valueOf(searchParams.get("deleted"))) {
+//                predicates.add(criteriaBuilder.isNotNull(taskRoot.get("deletedAt")));
+//            } else {
+//                predicates.add(criteriaBuilder.isNull(taskRoot.get("deletedAt")));
+//            }
+//        } else {
+//            predicates.add(criteriaBuilder.isNull(taskRoot.get("deletedAt")));
+//        }
 
         criteriaQuery.where(predicates.toArray(Predicate[]::new));
         criteriaQuery.multiselect(

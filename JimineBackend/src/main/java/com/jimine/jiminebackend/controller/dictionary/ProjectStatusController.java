@@ -1,7 +1,7 @@
 package com.jimine.jiminebackend.controller.dictionary;
 
-import com.jimine.jiminebackend.model.dictionary.ProjectStatus;
-import com.jimine.jiminebackend.request.BasePageRequest;
+import com.jimine.jiminebackend.model.entity.dictionary.ProjectStatus;
+import com.jimine.jiminebackend.model.request.BasePageRequest;
 import com.jimine.jiminebackend.service.dictionary.ProjectStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

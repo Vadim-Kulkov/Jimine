@@ -1,6 +1,6 @@
 package com.jimine.jiminebackend.repository;
 
-import com.jimine.jiminebackend.model.TaskComment;
+import com.jimine.jiminebackend.model.entity.TaskComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

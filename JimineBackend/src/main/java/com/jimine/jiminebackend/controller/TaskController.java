@@ -1,10 +1,10 @@
 package com.jimine.jiminebackend.controller;
 
-import com.jimine.jiminebackend.dto.TaskDto;
-import com.jimine.jiminebackend.dto.TaskHistDto;
-import com.jimine.jiminebackend.request.task.AddUserRequestWrapper;
-import com.jimine.jiminebackend.request.task.CreateTaskRequest;
-import com.jimine.jiminebackend.request.task.UpdateTaskRequest;
+import com.jimine.jiminebackend.model.dto.TaskDto;
+import com.jimine.jiminebackend.model.dto.TaskHistDto;
+import com.jimine.jiminebackend.model.request.task.AddUserRequestWrapper;
+import com.jimine.jiminebackend.model.request.task.CreateTaskRequest;
+import com.jimine.jiminebackend.model.request.task.UpdateTaskRequest;
 import com.jimine.jiminebackend.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -66,5 +66,4 @@ public class TaskController {
     public List<TaskHistDto> getCurrentUserTaskHistory() {
         return service.getTaskHistory();
     }
-
 }

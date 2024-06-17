@@ -1,11 +1,11 @@
 package com.jimine.jiminebackend.service.security;
 
-import com.jimine.jiminebackend.model.User;
-import com.jimine.jiminebackend.model.dictionary.Role;
+import com.jimine.jiminebackend.model.entity.User;
+import com.jimine.jiminebackend.model.entity.dictionary.Role;
 import com.jimine.jiminebackend.repository.RoleRepository;
 import com.jimine.jiminebackend.repository.UserRepository;
-import com.jimine.jiminebackend.request.SignInRequest;
-import com.jimine.jiminebackend.request.SignUpRequest;
+import com.jimine.jiminebackend.model.request.SignInRequest;
+import com.jimine.jiminebackend.model.request.SignUpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

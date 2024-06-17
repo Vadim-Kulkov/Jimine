@@ -1,7 +1,7 @@
 package com.jimine.jiminebackend.controller;
 
-import com.jimine.jiminebackend.dto.UserProfileDto;
-import com.jimine.jiminebackend.request.UserProfileRequest;
+import com.jimine.jiminebackend.model.dto.UserProfileDto;
+import com.jimine.jiminebackend.model.request.UserProfileRequest;
 import com.jimine.jiminebackend.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

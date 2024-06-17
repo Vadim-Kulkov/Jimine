@@ -1,8 +1,8 @@
 package com.jimine.jiminebackend.repository.reference;
 
-import com.jimine.jiminebackend.model.User;
-import com.jimine.jiminebackend.model.reference.RefUserProject;
-import com.jimine.jiminebackend.model.reference.ckey.CKeyUserProject;
+import com.jimine.jiminebackend.model.entity.User;
+import com.jimine.jiminebackend.model.entity.reference.RefUserProject;
+import com.jimine.jiminebackend.model.entity.reference.ckey.CKeyUserProject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

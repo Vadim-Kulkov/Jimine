@@ -1,7 +1,7 @@
 package com.jimine.jiminebackend.repository;
 
-import com.jimine.jiminebackend.model.Project;
-import com.jimine.jiminebackend.model.reference.RefUserProject;
+import com.jimine.jiminebackend.model.entity.Project;
+import com.jimine.jiminebackend.model.entity.reference.RefUserProject;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

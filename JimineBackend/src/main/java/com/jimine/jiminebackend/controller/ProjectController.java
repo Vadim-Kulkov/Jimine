@@ -1,8 +1,8 @@
 package com.jimine.jiminebackend.controller;
 
-import com.jimine.jiminebackend.dto.ProjectDto;
-import com.jimine.jiminebackend.request.project.ProjectRequest;
-import com.jimine.jiminebackend.request.project.UpdateProjectRequest;
+import com.jimine.jiminebackend.model.dto.ProjectDto;
+import com.jimine.jiminebackend.model.request.project.ProjectRequest;
+import com.jimine.jiminebackend.model.request.project.UpdateProjectRequest;
 import com.jimine.jiminebackend.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

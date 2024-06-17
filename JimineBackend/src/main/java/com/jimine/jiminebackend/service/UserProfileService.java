@@ -1,11 +1,11 @@
 package com.jimine.jiminebackend.service;
 
-import com.jimine.jiminebackend.dto.UserProfileDto;
-import com.jimine.jiminebackend.model.User;
-import com.jimine.jiminebackend.model.UserInfo;
+import com.jimine.jiminebackend.model.dto.UserProfileDto;
+import com.jimine.jiminebackend.model.entity.User;
+import com.jimine.jiminebackend.model.entity.UserInfo;
 import com.jimine.jiminebackend.repository.UserInfoRepository;
 import com.jimine.jiminebackend.repository.UserRepository;
-import com.jimine.jiminebackend.request.UserProfileRequest;
+import com.jimine.jiminebackend.model.request.UserProfileRequest;
 import com.jimine.jiminebackend.service.security.SecurityService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;

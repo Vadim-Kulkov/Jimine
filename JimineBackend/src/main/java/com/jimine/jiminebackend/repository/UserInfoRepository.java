@@ -1,6 +1,6 @@
 package com.jimine.jiminebackend.repository;
 
-import com.jimine.jiminebackend.model.UserInfo;
+import com.jimine.jiminebackend.model.entity.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

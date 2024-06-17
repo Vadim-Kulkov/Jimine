@@ -1,8 +1,8 @@
 package com.jimine.jiminebackend.controller;
 
-import com.jimine.jiminebackend.dto.JwtAuthenticationResponse;
-import com.jimine.jiminebackend.request.SignInRequest;
-import com.jimine.jiminebackend.request.SignUpRequest;
+import com.jimine.jiminebackend.model.dto.JwtAuthenticationResponse;
+import com.jimine.jiminebackend.model.request.SignInRequest;
+import com.jimine.jiminebackend.model.request.SignUpRequest;
 import com.jimine.jiminebackend.service.security.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

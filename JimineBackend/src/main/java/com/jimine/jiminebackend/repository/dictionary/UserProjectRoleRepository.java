@@ -1,6 +1,6 @@
 package com.jimine.jiminebackend.repository.dictionary;
 
-import com.jimine.jiminebackend.model.dictionary.UserProjectRole;
+import com.jimine.jiminebackend.model.entity.dictionary.UserProjectRole;
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

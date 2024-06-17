@@ -1,6 +1,6 @@
 package com.jimine.jiminebackend.service.security;
 
-import com.jimine.jiminebackend.model.User;
+import com.jimine.jiminebackend.model.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
